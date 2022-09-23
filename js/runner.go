@@ -37,6 +37,14 @@ func (j *Runner) GetObject(name string) (*Object, error) {
 	return &Object{j, r}, nil
 }
 
+func (j *Runner) Set(name string, value interface{}) error {
+	return j.vm.Set(name, value)
+}
+
+func (j *Runner) ToValue(value interface{}) goja.Value {
+	return j.vm.ToValue(value)
+}
+
 func (j *Runner) CallFunction(method string, args ...interface{}) (goja.Value, error) {
 
 	met := j.vm.Get(method)
