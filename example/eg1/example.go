@@ -33,7 +33,7 @@ out1 = sub(out1, 10)
 		fmt.Println(err)
 		return
 	}
-	res, err := j.GetGlobalObject().GetNumber("out1")
+	res, err := j.GetGlobalObject().ToFloat("out1")
 	if err != nil {
 		fmt.Println(err)
 		return

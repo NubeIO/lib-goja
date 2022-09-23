@@ -23,7 +23,7 @@ func Test() {
 		fmt.Printf("Error loading JS code %v", err)
 		return
 	}
-	j.Set("passInValue", 10)
+	j.Set("passInValue", 22.465645)
 
 	j.GetGlobalObject()
 
@@ -33,7 +33,7 @@ func Test() {
 		return
 	}
 
-	res, err := j.GetGlobalObject().GetNumber("getOutValue")
+	res, err := j.GetGlobalObject().ToInteger("getOutValue")
 	if err != nil {
 		fmt.Println(err)
 		return

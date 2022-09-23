@@ -3,7 +3,6 @@ package js
 import (
 	"fmt"
 	"github.com/dop251/goja"
-	"reflect"
 )
 
 type Object struct {
@@ -47,15 +46,30 @@ func (jo *Object) CallReturningStr(method string, args ...interface{}) (string, 
 	return v.String(), nil
 }
 
-func (jo *Object) GetNumber(name string) (int64, error) {
+func (jo *Object) ToInteger(name string) (int64, error) {
 	v := jo.obj.Get(name)
 	if v == nil {
 		return 0, fmt.Errorf("Got nil value for %s ", name)
 	}
-	if v.ExportType() != reflect.TypeOf(int64(0)) {
-		return 0, fmt.Errorf("The variable %s is not number type", name)
+	v.ToInteger()
+	f, ok := getInt64(v.ToInteger())
+	if !ok {
+		return 0, fmt.Errorf("the variable %s is not number type", name)
 	}
-	return v.ToInteger(), nil
+	return f, nil
+}
+
+func (jo *Object) ToFloat(name string) (float64, error) {
+	v := jo.obj.Get(name)
+	if v == nil {
+		return 0, fmt.Errorf("Got nil value for %s ", name)
+	}
+	v.ToFloat()
+	f, ok := getFloat(v.ToFloat())
+	if !ok {
+		return 0, fmt.Errorf("the variable %s is not number type", name)
+	}
+	return f, nil
 }
 
 func (jo *Object) GetString(name string) (string, error) {
@@ -76,4 +90,52 @@ func (jo *Object) GetObject(name string) (*Object, error) {
 	r := obj.ToObject(jo.j.vm)
 
 	return &Object{jo.j, r}, nil
+}
+
+func getFloat(in interface{}) (val float64, ok bool) {
+	switch i := in.(type) {
+	case int:
+		val = float64(i)
+	case float64:
+		val = i
+	case float32:
+		val = float64(i)
+	case int64:
+		val = float64(i)
+	default:
+		return 0, false
+	}
+	return val, true
+}
+
+func getInt64(in interface{}) (val int64, ok bool) {
+	switch i := in.(type) {
+	case int:
+		val = int64(i)
+	case float64:
+		val = int64(i)
+	case float32:
+		val = int64(i)
+	case int64:
+		val = i
+	default:
+		return 0, false
+	}
+	return val, true
+}
+
+func GetInt(in interface{}) (val int, ok bool) {
+	switch i := in.(type) {
+	case int:
+		val = i
+	case float64:
+		val = int(i)
+	case float32:
+		val = int(i)
+	case int64:
+		val = int(i)
+	default:
+		return 0, false
+	}
+	return val, true
 }
