@@ -36,6 +36,25 @@ func (j *Runner) GetObject(name string) (*Object, error) {
 
 	return &Object{j, r}, nil
 }
+
+func (j *Runner) CallFunction(method string, args ...interface{}) (goja.Value, error) {
+
+	met := j.vm.Get(method)
+	if met == nil {
+		return nil, fmt.Errorf("Got nil value for %s ", method)
+	}
+	var fn goja.Callable
+	err := j.vm.ExportTo(met, &fn)
+	if err != nil {
+		return nil, err
+	}
+	var vars []goja.Value
+	for _, a := range args {
+		vars = append(vars, j.vm.ToValue(a))
+	}
+	return fn(met, vars...)
+}
+
 func (j *Runner) GetGlobalObject() *Object {
 	r := j.vm.GlobalObject()
 	return &Object{j, r}
