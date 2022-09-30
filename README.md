@@ -1,7 +1,8 @@
 # lib-goja
 
 wrapper around goja
-https://github.com/dop251/goja
+copied from here
+https://github.com/integration-system/isp-script
 
 
 see the example
