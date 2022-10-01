@@ -8,26 +8,29 @@ import (
 
 func main() {
 
-	const SCRIPT = `
-	console.log(arg)
-	console.log(1, 2, arg["key"])
-	var x = Number(arg["key"])
-	console.log("test")
-	return [1,2,x]
+	const eg = `let pri = {
+    "priority": {
+            "_14": Number(arg["in1"]),
+            "_15": Number(arg["in2"]),
+            "_16": Number(arg["in3"])
+        
+        }
+}
+
+return JSON.stringify(pri)
+
+
 `
-	script, err := js.New(js.NewScript(SCRIPT))
+	script, err := js.New(js.NewScript(eg))
 	if err != nil {
 		return
 	}
 
-	arg := map[string]interface{}{"key": "22"}
+	arg := map[string]interface{}{"in1": 22.5, "in2": 33.3, "in3": nil}
 
 	consoleLogs := new(bytes.Buffer)
 	result, err := js.NewEngine().Execute(script, arg, js.WithLogging(consoleLogs))
 
 	fmt.Println(consoleLogs)
 	fmt.Println(result)
-	arr, ok := result.([]interface{})
-	fmt.Println(arr, ok)
-	fmt.Println(arr[2].(int64) * 2)
 }
