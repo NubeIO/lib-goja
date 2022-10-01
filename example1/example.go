@@ -16,8 +16,11 @@ func main() {
         
         }
 }
-
-return JSON.stringify(pri)
+var arr = [];
+arr[0]=22
+arr[1]="hello"
+arr[2]=arr.length
+return [JSON.stringify(pri), arr]
 
 
 `
